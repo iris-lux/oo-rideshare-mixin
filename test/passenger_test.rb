@@ -70,5 +70,75 @@ describe "Passenger class" do
 
   describe "net_expenditures" do
     # You add tests for the net_expenditures method
+    before do
+      @passenger = RideShare::Passenger.new(
+        id: 1,
+        name: "Ada",
+        phone_number: "412-432-7640"
+      )
+      @trips = [{
+        id: 10,
+        passenger: @passenger,
+        start_time: Time.now - 60,
+        end_time: Time.now,
+        cost: 23.45,
+        rating: 3
+        },
+            {
+        id: 8,
+        passenger: @passenger,
+        start_time: Time.now - 60,
+        end_time: Time.now,
+        cost: 26.55,
+        rating: 3
+        }]
+    end
+    it 'accurately adds up the costs of trips' do
+
+      @trips.each{|trip| @passenger.add_trip(RideShare::Trip.new(trip))}
+
+      expect(@passenger.net_expenditures).must_equal 50
+    end
+
+    it 'if there are no trips, returns 0' do
+      expect(@passenger.net_expenditures).must_equal 0
+    end
+  end
+
+  describe "total_time_spent" do
+    before do
+      @passenger = RideShare::Passenger.new(
+          id: 1,
+          name: "Ada",
+          phone_number: "412-432-7640"
+      )
+
+      @trips = [{
+                    id: 10,
+                    passenger: @passenger,
+                    start_time: Time.now - 25 * 60,
+                    end_time: Time.now,
+                    cost: 23.45,
+                    rating: 3
+                },
+                {
+                    id: 8,
+                    passenger: @passenger,
+                    start_time: Time.now - 25 * 60,
+                    end_time: Time.now,
+                    cost: 26.55,
+                    rating: 3
+                }]
+    end
+    it 'accurately adds up the times of the trips' do
+
+      @trips.each{|trip| @passenger.add_trip(RideShare::Trip.new(trip))}
+
+      expect(@passenger.total_time_spent).must_be_close_to 3000
+    end
+
+    it 'if there are no trips, returns 0' do
+      expect(@passenger.total_time_spent).must_equal 0
+    end
   end
 end
