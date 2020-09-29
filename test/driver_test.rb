@@ -29,6 +29,10 @@ describe "Driver class" do
       expect(RideShare::Driver.new(id: 100, name: "George", vin: "12345678901234567").status).must_equal :AVAILABLE
     end
 
+    it "throws an argument error for a bad status value" do
+      expect{RideShare::Driver.new(id: 100, name: "George", vin: "12345678901234567", status: :wrong)}.must_raise ArgumentError
+    end
+
     it "sets driven trips to an empty array if not provided" do
       expect(@driver.trips).must_be_kind_of Array
       expect(@driver.trips.length).must_equal 0
