@@ -54,7 +54,7 @@ module RideShare
     end
 
     def check_duration
-      if @end_time - @start_time <= 0
+      if @end_time - @start_time < 0
         raise ArgumentError.new("End time is before start time.")
       end
     end

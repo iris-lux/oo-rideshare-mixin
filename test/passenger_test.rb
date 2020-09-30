@@ -118,6 +118,7 @@ describe "Passenger class" do
 
       @trips = [{
                     id: 10,
+                    driver_id: 2,
                     passenger: @passenger,
                     start_time: Time.now - 25 * 60,
                     end_time: Time.now,
@@ -126,6 +127,7 @@ describe "Passenger class" do
                 },
                 {
                     id: 8,
+                    driver_id: 2,
                     passenger: @passenger,
                     start_time: Time.now - 25 * 60,
                     end_time: Time.now,

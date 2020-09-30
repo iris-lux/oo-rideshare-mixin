@@ -20,6 +20,20 @@ module RideShare
       @trips << trip
     end
 
+    def average_rating
+      return @trips.empty? ? 0 : @trips.sum{|trip| trip.rating.to_f}/@trips.length
+    end
+
+    def total_revenue
+      after_fee_costs = 0
+
+      @trips.each do |trip|
+        after_fee_costs += (trip.cost - 1.65) if trip.cost > 1.65
+      end
+
+      return after_fee_costs * 0.8
+    end
+
     private
 
     def self.from_csv(record)

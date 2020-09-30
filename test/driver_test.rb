@@ -136,6 +136,65 @@ describe "Driver class" do
   end
 
   describe "total_revenue" do
+    before do
+      @driver = RideShare::Driver.new(
+          id: 54,
+          name: "Rogers Bartell IV",
+          vin: "1C9EVBRM0YBC564DZ"
+      )
+      @trips = [{
+                    id: 10,
+                    driver_id: 2,
+                    passenger_id: 1,
+                    start_time: Time.now - 25 * 60,
+                    end_time: Time.now,
+                    cost: 23.45,
+                    rating: 3
+                },
+                {
+                    id: 8,
+                    driver_id: 2,
+                    passenger_id: 1,
+                    start_time: Time.now - 25 * 60,
+                    end_time: Time.now,
+                    cost: 26.55,
+                    rating: 3
+                }]
+
+      @trips.each{|trip| @driver.add_trip(RideShare::Trip.new(trip))}
+    end
     # You add tests for the total_revenue method
+    # This method calculates that driver's total revenue across all their trips.
+    # Each driver gets 80% of the trip cost after a fee of $1.65 per trip is subtracted.
+    it 'returns a float' do
+      expect(@driver.total_revenue).must_be_instance_of Float
+    end
+
+    it 'adds costs together, subtracts 1.65 and takes 80 percent' do
+      expect(@driver.total_revenue).must_be_close_to 37.36
+    end
+
+    it 'would set the revenue of the trip to 0 if the cost of a trip is less than $1.65' do
+      @driver = RideShare::Driver.new(
+          id: 54,
+          name: "Rogers Bartell IV",
+          vin: "1C9EVBRM0YBC564DZ"
+      )
+
+      trip2 =  {
+          id: 10,
+          driver_id: 2,
+          passenger_id: 1,
+          start_time: Time.now - 25 * 60,
+          end_time: Time.now,
+          cost: 1.45,
+          rating: 3
+      }
+
+      @driver.add_trip(RideShare::Trip.new(trip2))
+      expect(@driver.total_revenue).must_equal 0
+
+    end
+
   end
 end
