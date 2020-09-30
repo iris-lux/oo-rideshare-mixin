@@ -74,9 +74,11 @@ module RideShare
         "rating=#{rating}>"
     end
 
-    def connect(passenger)
+    def connect(passenger, driver)
       @passenger = passenger
       passenger.add_trip(self)
+      @driver = driver
+      driver.add_trip(self)
     end
 
     private
@@ -84,6 +86,7 @@ module RideShare
     def self.from_csv(record)
       return self.new(
                id: record[:id],
+               driver_id: record[:driver_id],
                passenger_id: record[:passenger_id],
                start_time: Time.parse(record[:start_time]),
                end_time: Time.parse(record[:end_time]),
