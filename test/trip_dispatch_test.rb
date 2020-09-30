@@ -78,7 +78,7 @@ describe "TripDispatcher class" do
     end
   end
 
-  # TODO: un-skip for Wave 2
+
   describe "drivers" do
     describe "find_driver method" do
       before do
