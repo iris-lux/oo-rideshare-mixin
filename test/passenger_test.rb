@@ -46,6 +46,7 @@ describe "Passenger class" do
         )
       trip = RideShare::Trip.new(
         id: 8,
+        driver_id: 11,
         passenger: @passenger,
         start_time: Time.new(2016, 8, 8),
         end_time: Time.new(2016, 8, 9),
@@ -78,6 +79,7 @@ describe "Passenger class" do
       )
       @trips = [{
         id: 10,
+        driver_id: 11,
         passenger: @passenger,
         start_time: Time.now - 60,
         end_time: Time.now,
@@ -86,6 +88,7 @@ describe "Passenger class" do
         },
             {
         id: 8,
+        driver_id: 11,
         passenger: @passenger,
         start_time: Time.now - 60,
         end_time: Time.now,
