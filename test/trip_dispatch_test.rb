@@ -121,5 +121,53 @@ describe "TripDispatcher class" do
         end
       end
     end
+
+    describe "Assign an available driver to the passenger requesting the trip." do
+      before do
+        @dispatcher = build_test_dispatcher
+      end
+      it "must return trip object" do
+        expect(@dispatcher.request_trip(2)).must_be_instance_of RideShare::Trip
+      end
+
+      it 'adds a trip to passenger when passengers id is passed' do
+        passenger = @dispatcher.find_passenger(2)
+        trip_count = passenger.trips.length
+        @dispatcher.request_trip(2)
+        expect(passenger.trips.length).must_equal (trip_count + 1)
+      end
+
+      it 'adds a trip to first available driver when request_trip is called' do
+        driver = @dispatcher.drivers.find{|driver| driver.status == :AVAILABLE}
+        trip_count = driver.trips.length
+        @dispatcher.request_trip(2)
+        expect(driver.trips.length).must_equal (trip_count + 1)
+      end
+
+      it 'adds first available driver' do
+        driver = @dispatcher.drivers.find{|driver| driver.status == :AVAILABLE}
+
+        requested_trip = @dispatcher.request_trip(2)
+
+        expect(driver.id).must_equal (requested_trip.driver.id)
+      end
+      it 'switches drivers status to unavailable' do
+        driver = @dispatcher.drivers.find{|driver| driver.status == :AVAILABLE}
+
+        @dispatcher.request_trip(2)
+
+        expect(driver.status).must_equal (:UNAVAILABLE)
+      end
+
+      it 'returns nil if there are no available drivers' do
+        @dispatcher.request_trip(2)
+        @dispatcher.request_trip(1)
+        @dispatcher.request_trip(3)
+        expect(@dispatcher.request_trip(3)).must_be_nil
+      end
+
+
+    end
   end
 end
+

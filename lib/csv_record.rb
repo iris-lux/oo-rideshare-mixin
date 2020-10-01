@@ -24,7 +24,7 @@ module RideShare
 
     def self.validate_id(id)
       if id.nil? || id <= 0
-        raise ArgumentError, 'ID cannot be blank or less than one.'
+          raise ArgumentError, 'ID cannot be blank or less than one.'
       end
     end
 

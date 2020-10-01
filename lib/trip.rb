@@ -47,19 +47,22 @@ module RideShare
       @rating = rating
 
       check_duration
-
-      if @rating > 5 || @rating < 1
-        raise ArgumentError.new("Invalid rating #{@rating}")
+      unless @rating.nil?
+        if @rating > 5 || @rating < 1
+          raise ArgumentError.new("Invalid rating #{@rating}")
+        end
       end
     end
 
     def check_duration
+      return 0 if @end_time.nil?
       if @end_time - @start_time < 0
         raise ArgumentError.new("End time is before start time.")
       end
     end
 
     def calculate_duration
+      return 0 if @end_time.nil?
       return @end_time - @start_time
     end
     def inspect

@@ -1,6 +1,6 @@
 require_relative 'test_helper'
 require 'time'
-TEST_DATA_DIR = 'test/test_data'
+# TEST_DATA_DIR = 'test/test_data'
 
 describe "Trip class" do
   describe "initialize" do
