@@ -197,4 +197,34 @@ describe "Driver class" do
     end
 
   end
+  describe "ignore in-progress trips for calculating revenue and rating" do
+    before do
+      @trip = RideShare::Trip.new(
+          id: 11,
+          passenger_id: 4,
+          start_time: Time.now,
+          end_time: nil,
+          cost: nil,
+          rating: nil,
+          driver_id: 54
+      )
+      @driver = RideShare::Driver.new(
+          id: 54,
+          name: "Rogers Bartell IV",
+          vin: "1C9EVBRM0YBC564DZ"
+      )
+      @driver.add_trip(@trip)
+    end
+
+    it 'should not calculate the average of a in-progress trip' do
+      expect(@driver.total_revenue).must_equal 0
+    end
+
+    it 'should not calculate the average rating of a in-progress trip' do
+      expect(@driver.average_rating).must_equal 0
+    end
+
+  end
+
+
 end

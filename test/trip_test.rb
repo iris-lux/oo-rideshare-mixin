@@ -71,6 +71,20 @@ describe "Trip class" do
       }
       expect{RideShare::Trip.new(trip_data)}.must_raise ArgumentError
     end
+
+    it "check_duration returns 0 when trip is in progress" do
+      @trip = RideShare::Trip.new(
+          id: 11,
+          passenger_id: 4,
+          start_time: Time.now,
+          end_time: nil,
+          cost: nil,
+          rating: nil,
+          driver_id: 3
+      )
+      expect(@trip.check_duration).must_equal 0
+    end
+
   end
 
   describe "from_csv" do
@@ -87,6 +101,19 @@ describe "Trip class" do
   end
 
   describe "calculate duration in seconds" do
+
+    it "returns 0 when trip is in progress" do
+      @trip = RideShare::Trip.new(
+          id: 11,
+          passenger_id: 4,
+          start_time: Time.now,
+          end_time: nil,
+          cost: nil,
+          rating: nil,
+          driver_id: 3
+      )
+      expect(@trip.calculate_duration).must_equal 0
+    end
 
     it "calculated duration of trips in seconds" do
       start_time = Time.now - 60 * 60

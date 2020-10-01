@@ -145,5 +145,35 @@ describe "Passenger class" do
     it 'if there are no trips, returns 0' do
       expect(@passenger.total_time_spent).must_equal 0
     end
+
+  end
+
+  describe "ignore in-progress trips for calculating cost and time" do
+    before do
+      @trip = RideShare::Trip.new(
+        id: 11,
+        passenger_id: 4,
+        start_time: Time.now,
+        end_time: nil,
+        cost: nil,
+        rating: nil,
+        driver_id: 3
+       )
+      @passenger = RideShare::Passenger.new(
+          id: 1,
+          name: "Ada",
+          phone_number: "412-432-7640"
+      )
+      @passenger.add_trip(@trip)
+    end
+
+    it 'should not calculate the cost of a in-progress trip' do
+      expect(@passenger.net_expenditures).must_equal 0
+    end
+
+    it 'should not calculate the time of a in-progress trip' do
+      expect(@passenger.total_time_spent).must_equal 0
+    end
+
   end
 end
