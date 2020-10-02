@@ -28,21 +28,25 @@ module RideShare
 
     def request_trip(passenger_id)
 
-      driver = @drivers.find{|driver| driver.status == :AVAILABLE}
+      driver = find_available_driver
 
-      return nil if driver.nil?
+      if driver.nil?
+        puts "No driver is currently available"
+        return nil
+      end
 
       passenger = find_passenger(passenger_id)
 
       trip = Trip.new(
           id: (@trips.length + 1),
-          passenger_id: passenger_id,
+          passenger: passenger,
           start_time: Time.now,
           end_time: nil,
           cost: nil,
           rating: nil,
           driver: driver
       )
+
       passenger.add_trip(trip)
       driver.add_trip(trip)
       driver.make_unavailable
@@ -52,6 +56,9 @@ module RideShare
       return trip
     end
 
+    def find_available_driver
+      return @drivers.find{|driver| driver.status == :AVAILABLE}
+    end
 
     def inspect
       # Make puts output more useful
@@ -60,7 +67,6 @@ module RideShare
               #{drivers.count} drivers, \
               #{passengers.count} passengers>"
     end
-
 
     private
 
