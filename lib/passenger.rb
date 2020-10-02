@@ -1,7 +1,9 @@
 require_relative 'csv_record'
+require_relative 'rideable'
 
 module RideShare
   class Passenger < CsvRecord
+    include RideShare::Rideable
     attr_reader :name, :phone_number, :trips
 
     def initialize(id:, name:, phone_number:, trips: [])
@@ -12,9 +14,6 @@ module RideShare
       @trips = trips
     end
 
-    def add_trip(trip)
-      @trips << trip
-    end
 
     def net_expenditures
       return ended_trips.sum{|trip| trip.cost}
@@ -25,10 +24,6 @@ module RideShare
     end
 
     private
-
-    def ended_trips
-      return @trips.select{|trip| !trip.end_time.nil? || !trip.cost.nil? || !trip.rating.nil?}
-    end
 
     def self.from_csv(record)
       return new(
