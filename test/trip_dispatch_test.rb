@@ -17,13 +17,14 @@ describe "TripDispatcher class" do
 
     it "establishes the base data structures when instantiated" do
       dispatcher = build_test_dispatcher
+
       [:trips, :passengers].each do |prop|
         expect(dispatcher).must_respond_to prop
       end
 
       expect(dispatcher.trips).must_be_kind_of Array
       expect(dispatcher.passengers).must_be_kind_of Array
-      # expect(dispatcher.drivers).must_be_kind_of Array
+      expect(dispatcher.drivers).must_be_kind_of Array
     end
 
     it "loads the development data by default" do
@@ -122,12 +123,19 @@ describe "TripDispatcher class" do
       end
     end
 
-    describe "Assign an available driver to the passenger requesting the trip." do
+    describe "request_trip method" do
       before do
         @dispatcher = build_test_dispatcher
       end
+
       it "must return trip object" do
         expect(@dispatcher.request_trip(2)).must_be_instance_of RideShare::Trip
+      end
+
+      it 'adds a trip to the trips attribute' do
+        trips_before_request = @dispatcher.trips.length
+        @dispatcher.request_trip(2)
+        expect(@dispatcher.trips.length).must_equal(trips_before_request + 1)
       end
 
       it 'adds a trip to passenger when passengers id is passed' do
@@ -146,16 +154,13 @@ describe "TripDispatcher class" do
 
       it 'adds first available driver' do
         driver = @dispatcher.drivers.find{|driver| driver.status == :AVAILABLE}
-
         requested_trip = @dispatcher.request_trip(2)
-
         expect(driver.id).must_equal (requested_trip.driver.id)
       end
+
       it 'switches drivers status to unavailable' do
         driver = @dispatcher.drivers.find{|driver| driver.status == :AVAILABLE}
-
         @dispatcher.request_trip(2)
-
         expect(driver.status).must_equal (:UNAVAILABLE)
       end
 
@@ -165,8 +170,6 @@ describe "TripDispatcher class" do
         @dispatcher.request_trip(3)
         expect(@dispatcher.request_trip(3)).must_be_nil
       end
-
-
     end
   end
 end
