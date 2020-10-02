@@ -47,6 +47,7 @@ module RideShare
       @rating = rating
 
       check_duration
+
       unless @rating.nil?
         if @rating > 5 || @rating < 1
           raise ArgumentError.new("Invalid rating #{@rating}")
@@ -56,15 +57,14 @@ module RideShare
 
     def check_duration
       return 0 if @end_time.nil?
-      if @end_time - @start_time < 0
-        raise ArgumentError.new("End time is before start time.")
-      end
+      raise ArgumentError.new("End time is before start time.") if @end_time - @start_time < 0
     end
 
     def calculate_duration
       return 0 if @end_time.nil?
       return @end_time - @start_time
     end
+
     def inspect
       # Prevent infinite loop when puts-ing a Trip
       # trip contains a passenger contains a trip contains a passenger...

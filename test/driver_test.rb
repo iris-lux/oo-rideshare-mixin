@@ -117,6 +117,7 @@ describe "Driver class" do
         name: "Rogers Bartell IV",
         vin: "1C9EVBRM0YBC564DZ"
       )
+
       expect(driver.average_rating).must_equal 0
     end
 
@@ -193,10 +194,9 @@ describe "Driver class" do
 
       @driver.add_trip(RideShare::Trip.new(trip2))
       expect(@driver.total_revenue).must_equal 0
-
     end
-
   end
+
   describe "ignore in-progress trips for calculating revenue and rating" do
     before do
       @trip = RideShare::Trip.new(
@@ -223,8 +223,5 @@ describe "Driver class" do
     it 'should not calculate the average rating of a in-progress trip' do
       expect(@driver.average_rating).must_equal 0
     end
-
   end
-
-
 end
