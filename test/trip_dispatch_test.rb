@@ -79,7 +79,6 @@ describe "TripDispatcher class" do
     end
   end
 
-
   describe "drivers" do
     describe "find_driver method" do
       before do
@@ -123,9 +122,10 @@ describe "TripDispatcher class" do
       end
     end
 
-    describe "request_trip method" do
+    describe "request_trip method(Intelligent Dispatching)" do
       before do
         @dispatcher = build_test_dispatcher
+        @driver = @dispatcher.find_driver(3)
       end
 
       it "must return trip object" do
@@ -146,22 +146,32 @@ describe "TripDispatcher class" do
       end
 
       it 'adds a trip to first available driver when request_trip is called' do
-        driver = @dispatcher.drivers.find{|driver| driver.status == :AVAILABLE}
-        trip_count = driver.trips.length
+        trip_count = @driver.trips.length
         @dispatcher.request_trip(2)
-        expect(driver.trips.length).must_equal (trip_count + 1)
+        expect(@driver.trips.length).must_equal (trip_count + 1)
       end
 
-      it 'adds first available driver' do
-        driver = @dispatcher.drivers.find{|driver| driver.status == :AVAILABLE}
+      it 'assigns the first available driver who has never driven' do
         requested_trip = @dispatcher.request_trip(2)
-        expect(driver.id).must_equal (requested_trip.driver.id)
+        expect(@driver.id).must_equal (requested_trip.driver.id)
+      end
+
+      it 'assigns the driver who has never driven or whos most recent trip is oldest' do
+        @driver.add_trip(RideShare::Trip.new(
+                                              id:20,
+                                              passenger_id: 2,
+                                              start_time: Time.new(1998, 10, 31),
+                                              end_time: Time.new(1998, 11, 1),
+                                              driver: @driver,
+                                              rating: 3
+                                              ))
+        requested_trip = @dispatcher.request_trip(2)
+        expect(@driver.id).must_equal (requested_trip.driver.id)
       end
 
       it 'switches drivers status to unavailable' do
-        driver = @dispatcher.drivers.find{|driver| driver.status == :AVAILABLE}
         @dispatcher.request_trip(2)
-        expect(driver.status).must_equal (:UNAVAILABLE)
+        expect(@driver.status).must_equal (:UNAVAILABLE)
       end
 
       it 'returns nil if there are no available drivers' do
